@@ -1,5 +1,7 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
+const cors = require('cors');
+
 let HTTP_PORT = 8080 
 var db = require("./db.js")
 var viewCount = 1;
@@ -32,7 +34,7 @@ app.get('/', async function (req, res) {
     res.send(`<h2>Counter: `+viewCount+'</h2>')
 });
 
-app.get("/api/getcount", function (req, res) {
+app.get("/api/getcount", cors(), function (req, res) {
     db.all(getCountSql, function(err,rows){
         if(err){return reject(err);}
         
