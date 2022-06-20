@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var HTTP_PORT = 8080 
 var db = require("./db.js")
+var viewCount = 1;
 
 async function db_all(query){
     return new Promise(function(resolve,reject){
@@ -15,13 +16,21 @@ async function db_all(query){
 app.get('/', async function (req, res) {
     let getCountSql = "select count from visitor where name='page'";
     let updateCountSql = "UPDATE visitor set count = COALESCE(?,count) WHERE name = ?";
+    let insertCountSql = 'INSERT INTO visitor(name,count) VALUES (?,?)';
 
     let rows = await db_all(getCountSql)
-    var count = rows[0]["count"];
-    count++;
 
-    await db.run(updateCountSql, [count,'page'])
-    res.send(`<h2>Counter: `+count+'</h2>')
+    if(rows.length == 0){
+        await db.run(insertCountSql, ['page',1])
+    }else{
+        viewCount = rows[0]["count"];
+        viewCount++;
+
+        await db.run(updateCountSql, [viewCount,'page'])
+    }
+
+    res.send(`<h2>Counter: `+viewCount+'</h2>')
+
 });
 
 // Creating server to listen at localhost HTTP_PORT
