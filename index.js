@@ -19,7 +19,7 @@ async function db_all(query){
     });
 }
 
-app.get('/', async function (req, res) {
+app.get("/api/getcount", cors(), async function (req, res) {
     let rows = await db_all(getCountSql)
 
     if(rows.length == 0){
@@ -31,18 +31,11 @@ app.get('/', async function (req, res) {
         await db.run(updateCountSql, [viewCount,'page'])
     }
 
-    res.send(`<h2>Counter: `+viewCount+'</h2>')
-});
-
-app.get("/api/getcount", cors(), function (req, res) {
-    db.all(getCountSql, function(err,rows){
-        if(err){return reject(err);}
-        
-        res.json({
-            "message":"Ok",
-            "count": rows[0]["count"]
-        })
-    });
+    res.json({
+        "message":"Ok",
+        "count": viewCount
+    })
+    // res.send(`<h2>Counter: `+viewCount+'</h2>')
 })
 
 // Creating server to listen at localhost HTTP_PORT
