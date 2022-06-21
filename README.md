@@ -10,6 +10,11 @@ npm install sqlite3 --save
 npm i --save cors
 ```
 
+## session
+```
+npm i express-session
+```
+
 ## run
 ```
 node index.js
